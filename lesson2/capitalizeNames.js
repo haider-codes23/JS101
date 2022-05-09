@@ -1,3 +1,4 @@
+let CLC = require('cli-color');
 function capitalizeNames(name) {
   for (let i = 0; i < name.length; i++) {
     name[i] = name[i][0].toUpperCase() + name[i].slice(1);
@@ -10,13 +11,8 @@ function capitalizeName(names) {
 
 let names = ['haider', 'ibraheem', 'yusuf'];
 capitalizeName(names);
-console.log(names);
+console.log(CLC.yellow(names));
 
 capitalizeNames(names);
 console.log(names);
-
-
-
-
-
 
