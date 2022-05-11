@@ -1,5 +1,23 @@
 let readline = require('readline-sync');
 
+const FINALROUND = 5;
+const MAXWINS = 3;
+
+const winningMoves = {
+  rock: ['scissors', 'lizard'],
+  paper: ['rock', 'spoch'],
+  scissors: ['paper', 'lizard'],
+  lizard: ['paper', 'spoch'],
+  spoch: ['rock', 'scissors']
+};
+const CHOICES = {
+  r: "rock",
+  p: "paper",
+  sc: "scissors",
+  l: "lizard",
+  sp: "spoch"
+};
+const VALID_CHOICES = Object.keys(CHOICES);
 let round;
 let playerWins;
 let computerWins;
@@ -7,16 +25,6 @@ let playerChoice;
 let computerChoice;
 let result;
 let answer;
-
-
-const CHOICES = {
-  r: "rock",
-  p: "paper",
-  sc: "scissors",
-  l: "lizard",
-  sp: "spock"
-};
-const VALID_CHOICES = Object.keys(CHOICES);
 
 function welcome() {
   prompt(`There are a total of 5 Rounds in this Game.\n==> You need to Win 3 Rounds out of 5 inorder to become a GrandWinner!!!`);
@@ -33,39 +41,31 @@ let invalidChoice = (choice) => {
   return (choice.trim() === '') || (!VALID_CHOICES.includes(choice));
 };
 
-let player = () => {
+let playerChooses = () => {
   let choice = readline.question(prompt(`Please choose a weapon from the given CHOICES:\n==> 'r' for rock\n==> 'p' for paper\n==> 'sc' for scissors\n==> 'l' for lizards\n==> 'sp' for spock\n`));
   while (invalidChoice(choice)) {
     prompt(`Wrong choice of Weapon! Please Choose from one of the given choices: \n==> 'r' for rock\n==> 'p' for paper\n==> 'sc' for scissors\n==> 'l' for lizards\n==> 'sp' for spock\n`);
     choice = readline.question();
   }
-  return CHOICES[choice];
+  //console.log(`${CHOICES[choice]}`);
+  return choice;
 };
 
-let computer = () => {
+let computerChooses = () => {
   let randomNumber = Math.floor(Math.random() * VALID_CHOICES.length);
   let choice = VALID_CHOICES[randomNumber];
-  return CHOICES[choice];
+  return choice;
 };
 
-function playerWin(player, computer) {
-  return ((player === 'rock' && computer === 'scissors')
-    || (player === 'rock' && computer === 'lizard')
-    || (player === 'paper' && computer === 'spock')
-    || (player === 'paper' && computer === 'rock')
-    || (player === 'scissors' && computer === 'paper')
-    || (player === 'scissors' && computer === 'lizard')
-    || (player === 'lizard' && computer === 'spock')
-    || (player === 'lizard' && computer === 'paper')
-    || (player === 'spock' && computer === 'scissors')
-    || (player === 'spock' && computer === 'rock'));
-}
-
-function win(player, computer) {
+function winner() {
   let winner;
-  if (playerWin(player, computer)) {
+  if ((playerChoice === 'rock' && winningMoves[playerChoice].includes(computerChoice)) ||
+  (playerChoice === 'paper' && winningMoves[playerChoice].includes(computerChoice)) ||
+  (playerChoice === 'scissors' && winningMoves[playerChoice].includes(computerChoice)) ||
+  (playerChoice === 'lizard' && winningMoves[playerChoice].includes(computerChoice)) ||
+  (playerChoice === 'spoch' && winningMoves[playerChoice].includes(computerChoice))) {
     winner = 'player';
-  } else if (player === computer) {
+  } else if (playerChoice === computerChoice) {
     winner = 'draw';
   } else {
     winner = 'computer';
@@ -73,31 +73,27 @@ function win(player, computer) {
   return winner;
 }
 
-function displayRounds(result, round, playerWins, computerWins) {
+function displayRounds() {
   if (result === 'player') {
     prompt(`YOU CHOOSE ${playerChoice.toUpperCase()} AND COMPUTER CHOOSE ${computerChoice.toUpperCase()}`);
     prompt(`YOU WON ROUND ${round}`);
-    prompt(`TOTAL ROUNDS WON BY PLAYER: ${playerWins} || TOTAL ROUNDS WON BY COMPUTER: ${computerWins}`);
-    console.log('*************************************************************************************');
   } else if (result === 'computer') {
     prompt(`YOU CHOOSE ${playerChoice.toUpperCase()} AND COMPUTER CHOOSE ${computerChoice.toUpperCase()}`);
     prompt(`COMPUTER WON ROUND ${round}`);
-    prompt(`TOTAL ROUNDS WON BY PLAYER: ${playerWins} || TOTAL ROUNDS WON BY COMPUTER: ${computerWins}`);
-    console.log('**************************************************************************************');
   } else if (result === 'draw') {
     prompt(`You both choose ${playerChoice.toUpperCase()}`);
     prompt('NOBODY WON. THIS ROUND WAS A DRAW');
-    prompt(`TOTAL ROUNDS WON BY PLAYER: ${playerWins} || TOTAL ROUNDS WON BY COMPUTER: ${computerWins}`);
-    console.log('*************************************************************************************');
   }
+  console.log('*************************************************************************************');
+  prompt(`TOTAL ROUNDS WON BY PLAYER: ${playerWins} || TOTAL ROUNDS WON BY COMPUTER: ${computerWins}`);
 }
 
-function displayResult(round, playerWins, computerWins) {
+function displayResult() {
   //console.clear();
-  if (round === 5) {
-    if ((playerWins >= 3) && (playerWins > computerWins)) {
+  if (round === FINALROUND) {
+    if ((playerWins >= MAXWINS) && (playerWins > computerWins)) {
       prompt(`CONGRATULATIONS YOU HAVE WON ${playerWins} ROUNDS OUT OF 5, YOU ARE THE GRAND WINNER !!!\n`);
-    } else if ((computerWins >= 3) && (computerWins > playerWins)) {
+    } else if ((computerWins >= MAXWINS) && (computerWins > playerWins)) {
       prompt(`COMPUTER HAS WON ${computerWins} ROUNDS OUT OF 5, COMPUTER IS THE GRAND WINNER !!!\n`);
     } else if (playerWins === computerWins) {
       prompt(`THE GAME WAS A DRAW !!! YOU WON ${playerWins} ROUND OUT OF 5 AND COMPUTER WON ${computerWins} ROUND OUT OF 5`);
@@ -118,35 +114,40 @@ function playAgain() {
   }
   return answer;
 }
+function updateScore() {
+  if (result === 'player') {
+    playerWins++;
+  } else if (result === 'computer') {
+    computerWins++;
+  } else if (result === 'draw') {
+    playerWins += 0;
+    computerWins += 0;
+  }
+}
 
-while (true) {
-  welcome();
-  round = 1;
-  playerWins = 0;
-  computerWins = 0;
+function playMatch() {
   while (round <= 5) {
     prompt(`This is round ${round} out of 5`);
-    playerChoice = player();
-    computerChoice = computer();
-    result = win(playerChoice, computerChoice);
-    if (result === 'player') {
-      playerWins++;
-    } else if (result === 'computer') {
-      computerWins++;
-    } else if (result === 'draw') {
-      playerWins += 0;
-      computerWins += 0;
-    }
+    playerChoice = CHOICES[playerChooses()];
+    computerChoice = CHOICES[computerChooses()];
+    result = winner();
+    updateScore();
     console.clear();
-    displayRounds(result, round, playerWins, computerWins);
-    //console.clear();
-    displayResult(round, playerWins, computerWins);
-
+    displayRounds();
+    displayResult(round);
     round++;
     if (round === 6) {
       answer = playAgain();
     }
   }
+}
+
+welcome();
+while (true) {
+  round = 1;
+  playerWins = 0;
+  computerWins = 0;
+  playMatch();
   if (answer === 'n') {
     break;
   } else if (answer === 'y') {
