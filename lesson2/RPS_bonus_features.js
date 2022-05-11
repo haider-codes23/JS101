@@ -1,7 +1,7 @@
 let readline = require('readline-sync');
 
-const FINALROUND = 5;
-const MAXWINS = 3;
+const FINAL_ROUND = 5;
+const MAX_WINS = 3;
 
 const winningMoves = {
   rock: ['scissors', 'lizard'],
@@ -90,10 +90,10 @@ function displayRounds() {
 
 function displayResult() {
   //console.clear();
-  if (round === FINALROUND) {
-    if ((playerWins >= MAXWINS) && (playerWins > computerWins)) {
+  if (round === FINAL_ROUND) {
+    if ((playerWins >= MAX_WINS) && (playerWins > computerWins)) {
       prompt(`CONGRATULATIONS YOU HAVE WON ${playerWins} ROUNDS OUT OF 5, YOU ARE THE GRAND WINNER !!!\n`);
-    } else if ((computerWins >= MAXWINS) && (computerWins > playerWins)) {
+    } else if ((computerWins >= MAX_WINS) && (computerWins > playerWins)) {
       prompt(`COMPUTER HAS WON ${computerWins} ROUNDS OUT OF 5, COMPUTER IS THE GRAND WINNER !!!\n`);
     } else if (playerWins === computerWins) {
       prompt(`THE GAME WAS A DRAW !!! YOU WON ${playerWins} ROUND OUT OF 5 AND COMPUTER WON ${computerWins} ROUND OUT OF 5`);
