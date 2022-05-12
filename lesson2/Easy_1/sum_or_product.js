@@ -1,5 +1,5 @@
 // ask user to enter an integer greater than
-// ask user if he/she wants to compute sum or product of all the number 
+// ask user if he/she wants to compute sum or product of all the number
 // between 1 and entered Integer
 const READLINE = require('readline-sync');
 let integer;
