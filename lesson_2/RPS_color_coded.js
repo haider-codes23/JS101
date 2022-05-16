@@ -37,7 +37,7 @@ let invalidChoice = (choice) => {
 let player = () => {
   let choice = readline.question(prompt(CLC.magentaBright(`Please choose a weapon from the given CHOICES:\n==> 'r' for rock\n==> 'p' for paper\n==> 'sc' for scissors\n==> 'l' for lizards\n==> 'sp' for spock\n`)));
   while (invalidChoice(choice)) {
-    prompt(CLC.red(`Wrong choice of Weapon! Please Choose from one of the given choices: \n==> 'r' for rock\n==> 'p' for paper\n==> 'sc' for scissors\n==> 'l' for lizards\n==> 'sp' for spock\n`));
+    prompt(CLC.red.bold(`Wrong choice of Weapon! Please Choose from one of the given choices: \n==> 'r' for rock\n==> 'p' for paper\n==> 'sc' for scissors\n==> 'l' for lizards\n==> 'sp' for spock\n`));
     choice = readline.question();
   }
   return CHOICES[choice];

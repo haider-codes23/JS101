@@ -30,3 +30,4 @@ function signedNumberToString(number)  {
 console.log(signedNumberToString(-1212) === '-1212');
 console.log(signedNumberToString(+1234) === '1234');
 console.log(signedNumberToString(-1234) === ('-1234'));
+/*
