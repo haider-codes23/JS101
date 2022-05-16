@@ -1,0 +1,29 @@
+{
+  
+  "en": {
+    "welcome": "WELCOME TO THE SIMPLE CALCULAOTR APP!",
+    "name": "Please enter your name:",
+    "leftOperand": "Please Enter a number of your choice that should be placed on the Left side of the Operator: ",
+    "rightOperand": "Please Enter a number of your choice that should be placed on the Right side of the Operator : ",
+    "invalidOperand": "Hmmm... that doesn't look like a valid Operand, Please, Again Enter a valid operand below",
+    "getOperation": "Which Operation would you like to perform ?\n 1) Add \n 2) Subtract \n 3) Multiply \n 4) Divide\n",
+    "divisionByZero": "Arithmatic Exception: Cannot divide by Zero",
+    "result": "Result of Your Calculation: ",
+    "calculateAgain": "If you would like to perfrom another calculation Press y(for yes) or press any other key to exit"
+  },
+  "es": {
+    "welcome": "BIENVENIDO A LA APLICACIÓN SIMPLE CALCULAOTR!",
+    "name": "Por favor, escriba su nombre:",
+    "leftOperand": "Ingrese un número de su elección que debe colocarse en el lado izquierdo del Operador:",
+    "rightOperand": "Ingrese un número de su elección que debe colocarse en el lado derecho del Operador:",
+    "invalidOperand": "Hmmm... eso no parece un operando válido, por favor, otra vez Ingrese un operando válido a continuación",
+    "getOperation": "¿Qué operación le gustaría realizar?\n 1) Sumar \n 2) Restar \n 3) Multiplicar \n 4) Dividir\n",
+    "divisionByZero": "Excepción aritmética: no se puede dividir por cero",
+    "result": "Resultado de su cálculo:",
+    "calculateAgain": "Si desea realizar otro cálculo, presione y (para sí) o presione cualquier otra tecla para salir"
+  },
+  "lang": {
+    "language": "Plese Choose One of the following Language \n ==> 'en' for 'English' \n ==> 'es' for 'Spanish' \n Elija uno de los siguientes idiomas \n ==> 'en' para 'inglés' \n ==> 'es' para 'español' ",
+    "invalidLanguage": "Please Choose From the Given Choices\n ==> 'en' for 'English' \n ==> 'es' for 'Spanish' \n ==> 'en' para 'inglés' \n ==> 'es' para 'español' "
+  }
+}
