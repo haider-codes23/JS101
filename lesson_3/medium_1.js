@@ -118,7 +118,7 @@ function messWithDemographics(demoObject) {
   });
 }
 
-//messWithDemographics(munsters);
+messWithDemographics(munsters);
 console.log(Object.values(munsters));
 //console.log(munsters);
 //  Yes the family's data did get ransacked because objects are mutable.

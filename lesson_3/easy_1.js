@@ -15,7 +15,7 @@ console.log("**************************************************************");
 //         ==> true or false depending on wether or not the string ends with
 //         ==> the character passed to it as argumnet.
 // 2nd way ==> determine the length of the string
-//         ==> using the lenght of the string inside a condtional evaluate 
+//         ==> using the lenght of the string inside a condtional evaluate
 //         ==> if the last character of the string is an Excalmation mark or not
 let str1 = "come over here!";
 let str2 = "What's up,Doc?";
