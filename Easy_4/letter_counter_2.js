@@ -1,7 +1,7 @@
 function LengthOfWord(word) {
   let length = 0;
   for (let index = 0; index < word.length; index++) {
-    if ((word[index].toLowerCase() >= 'a') && (word[index].toLowerCase() <= 'z')) {
+    if ((word[index].toLowerCase().charCodeAt() >= 'a'.charCodeAt()) && (word[index].toLowerCase().charCodeAt() <= 'z'.charCodeAt())) {
       length += 1;
     }
   }
@@ -16,7 +16,7 @@ function wordSize(string) {
     if (wordLength === 0) {
       continue;
     }
-    console.log(wordSizesObj[wordLength]);
+
     if (!wordSizesObj[wordLength]) {
       wordSizesObj[wordLength] = 0;
     }
