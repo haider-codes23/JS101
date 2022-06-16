@@ -1,0 +1,22 @@
+//  P --> Understand the Problem
+//         Input:
+//         Output:
+//         Questions:-
+//              -
+//
+//         Rules:-
+//            Explicit Requirement:
+//              -
+//            Implicit Requirements:
+//              -
+//
+// E --> Examples and Test Cases
+//         -
+//
+//
+// D --> Data Structure:
+//
+// Algorithm:
+//       - 
+//
+// C --> Code With Intent
