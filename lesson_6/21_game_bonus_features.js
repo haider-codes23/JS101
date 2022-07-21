@@ -57,7 +57,11 @@ function displayDealerRules() {
 function prompt(message) {
   console.log(`=> ${message}`);
 }
-
+// on first iteration first will be equal to array.length - 1 which is
+// 53 - 1 = 52 and the expression will generate a number between 0(inclusive)
+// and 53(excluding), in the next iteration first is decremented by 1 and it's
+// value is 51, now the expression generates a number between 0(inclusive) an
+// 51(excluding).
 function shuffle(array) {
   for (let first = array.length - 1; first > 0; first--) {
     let second = Math.floor(Math.random() * (first + 1));// not clear
@@ -305,7 +309,7 @@ while (true) {
       displayResult(playersHandValue, dealersHandValue);
       updateScore(playersHandValue, dealersHandValue, scores);
       displayScores(scores);
-      if (scores.roundsPlayed === MAX_ROUNDS) {
+      if (scores.roundsPlayed >= MAX_ROUNDS) {
         prompt("THE MATCH IS OVER".bgGreen.bold);
         displayMatchWinner(scores);
       } else {
