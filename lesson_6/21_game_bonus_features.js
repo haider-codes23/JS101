@@ -159,9 +159,10 @@ function displayResult (playersHandValue, dealersHandValue) {
   }
 }
 
-function roundOutput (pCards, dCards, pHandValue, dHandValue) {
-  prompt(`You have ${hand(pCards)}, having a total of ${pHandValue}`.green.bold);
-  prompt(`Dealer has ${hand(dCards)}, having a total of ${dHandValue}`.green.bold);
+// eslint-disable-next-line max-len
+function roundOutput (playerCards, dealerCards, playersHandValue, dealersHandValue) {
+  prompt(`You have ${hand(playerCards)}, having a total of ${playersHandValue}`.green.bold);
+  prompt(`Dealer has ${hand(dealerCards)}, having a total of ${dealersHandValue}`.green.bold);
 }
 
 function displayScores(scores) {
@@ -189,7 +190,7 @@ function updateScore(playersHandValue, dealersHandValue, scores) {
   }
 }
 
-function playerTurn ( pCards, plHandValue, deck ) {
+function playerTurn ( playerCards, playersHandValue, deck ) {
   let playerChoice;
   do {
     prompt("Would you like to (h)it or (S)tay".green.bold);
@@ -201,14 +202,14 @@ function playerTurn ( pCards, plHandValue, deck ) {
     console.clear();
 
     if (playerChoice === 'h') {
-      pCards.push(deck.pop());
-      plHandValue = total(pCards);
+      playerCards.push(deck.pop());
+      playersHandValue = total(playerCards);
       prompt("YOU CHOOSE TO HIT".green.bold);
-      prompt(`Cards in your hands are ${hand(pCards).join(", ")}, having a total value of ${plHandValue}`.green.bold);
+      prompt(`Cards in your hands are ${hand(playerCards).join(", ")}, having a total value of ${playersHandValue}`.green.bold);
     }
-  } while (playerChoice !== 's' && !busted(plHandValue));
+  } while (playerChoice !== 's' && !busted(playersHandValue));
 
-  return [playerChoice, plHandValue, pCards];
+  return [playerChoice, playersHandValue, playerCards];
 }
 
 function displayMatchWinner (scores) {
@@ -309,7 +310,7 @@ while (true) {
       displayResult(playersHandValue, dealersHandValue);
       updateScore(playersHandValue, dealersHandValue, scores);
       displayScores(scores);
-      if (scores.roundsPlayed >= MAX_ROUNDS) {
+      if (scores.roundsPlayed === MAX_ROUNDS) {
         prompt("THE MATCH IS OVER".bgGreen.bold);
         displayMatchWinner(scores);
       } else {
