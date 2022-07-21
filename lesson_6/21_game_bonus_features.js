@@ -1,6 +1,13 @@
 const READLINE = require("readline-sync");
 require("cli-color");
 require("colors");
+const MAX_ACE_VALUE = 11;
+const MIN_ACE_VALUE = 1;
+const MAX_SUM = 21;
+const DEALER_STAY_VALUE = 17;
+const KING_QUEEN_JACK_VALUE = 10;
+const ACE_CORRECTION = 10;
+const MAX_ROUNDS = 5;
 const suits = {H: "Hearts", D: "Diamonds", C: "Clubs", S: "Spades"};
 const values = {
   two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9,
@@ -93,9 +100,9 @@ function total(cards) {
   let sum = 0;
   cards.forEach(card => {
     if (card[0] === "Ace") {
-      sum += 11;
+      sum += MAX_ACE_VALUE;
     } else if (['King', 'Queen', 'Jack'].includes(card[0])) {
-      sum += 10;
+      sum += KING_QUEEN_JACK_VALUE;
     } else {
       sum += card[0];
     }
@@ -103,8 +110,8 @@ function total(cards) {
 
   // Ace correction
   cards.filter(card => card[0] === "Ace").forEach(_ => {
-    if (sum > 21) {
-      sum -= 10;
+    if (sum > MAX_SUM) {
+      sum -= ACE_CORRECTION;
     }
   });
 
@@ -112,14 +119,14 @@ function total(cards) {
 }
 
 function busted(handValue) {
-  return handValue > 21;
+  return handValue > MAX_ACE_VALUE;
 }
 
 function detectResult (playersHandValue, dealersHandValue) {
 
-  if (playersHandValue > 21) {
+  if (playersHandValue > MAX_ACE_VALUE) {
     return 'PLAYER_BUSTED';
-  } else if (dealersHandValue > 21) {
+  } else if (dealersHandValue > MAX_ACE_VALUE) {
     return 'DEALER_BUSTED';
   } else if (playersHandValue > dealersHandValue) {
     return 'PLAYER_WON';
@@ -229,8 +236,8 @@ while (true) {
     choice = READLINE.question();
   }
   if (choice === 'e') break;
-  //console.clear();
-  while (scores.roundsPlayed < 5) {
+
+  while (scores.roundsPlayed < MAX_ROUNDS) {
     console.clear();
     let deck = initializeDeck();
 
@@ -260,7 +267,7 @@ while (true) {
       displayResult(playersHandValue, dealersHandValue);
       updateScore(playersHandValue, dealersHandValue, scores);
       displayScores(scores);
-      if (scores.roundsPlayed >= 5) {
+      if (scores.roundsPlayed >= MAX_ROUNDS) {
         prompt("The Match is over".bgGreen.bold);
         displayMatchWinner(scores);
       } else {
@@ -272,7 +279,7 @@ while (true) {
 
     if (playerChoice === 's') {
       // Dealers Turn
-      while (dealersHandValue <= 17) {
+      while (dealersHandValue <= DEALER_STAY_VALUE) {
         prompt("Dealer Hits".green.bold);
         dealerCards.push(deck.pop());
         dealersHandValue = total(dealerCards);
@@ -286,7 +293,7 @@ while (true) {
         updateScore(playersHandValue, dealersHandValue, scores);
         displayScores(scores);
         // eslint-disable-next-line max-depth
-        if (scores.roundsPlayed >= 5) {
+        if (scores.roundsPlayed >= MAX_ROUNDS) {
           prompt("The Match is over".bgGreen.bold);
           displayMatchWinner(scores);
         }
@@ -302,7 +309,7 @@ while (true) {
       displayResult(playersHandValue, dealersHandValue);
       updateScore(playersHandValue, dealersHandValue, scores);
       displayScores(scores);
-      if (scores.roundsPlayed >= 5) {
+      if (scores.roundsPlayed >= MAX_ROUNDS) {
         prompt("THE MATCH IS OVER".bgGreen.bold);
         displayMatchWinner(scores);
       } else {
