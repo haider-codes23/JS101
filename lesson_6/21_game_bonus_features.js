@@ -285,6 +285,7 @@ while (true) {
         displayResult(playersHandValue, dealersHandValue);
         updateScore(playersHandValue, dealersHandValue, scores);
         displayScores(scores);
+        // eslint-disable-next-line max-depth
         if (scores.roundsPlayed >= 5) {
           prompt("The Match is over".bgGreen.bold);
           displayMatchWinner(scores);
