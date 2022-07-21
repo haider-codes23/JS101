@@ -1,5 +1,5 @@
-const { bgRed } = require("cli-color");
 const READLINE = require("readline-sync");
+require("cli-color");
 require("colors");
 const suits = {H: "Hearts", D: "Diamonds", C: "Clubs", S: "Spades"};
 const values = {
