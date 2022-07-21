@@ -8,6 +8,8 @@ const DEALER_STAY_VALUE = 17;
 const KING_QUEEN_JACK_VALUE = 10;
 const ACE_CORRECTION = 10;
 const MAX_ROUNDS = 5;
+const START_GAME = 's';
+const END_GAME = 'e';
 const suits = {H: "Hearts", D: "Diamonds", C: "Clubs", S: "Spades"};
 const values = {
   two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9,
@@ -235,7 +237,7 @@ while (true) {
     prompt(`Press 's' to Start a Match consisting of 5 Rounds or press 'e' to exit the Game`.bgRed.bold);
     choice = READLINE.question();
   }
-  if (choice === 'e') break;
+  if (choice === END_GAME) break;
 
   while (scores.roundsPlayed < MAX_ROUNDS) {
     console.clear();
