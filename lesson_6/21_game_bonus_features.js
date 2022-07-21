@@ -305,7 +305,7 @@ while (true) {
       displayResult(playersHandValue, dealersHandValue);
       updateScore(playersHandValue, dealersHandValue, scores);
       displayScores(scores);
-      if (scores.roundsPlayed >= MAX_ROUNDS) {
+      if (scores.roundsPlayed === MAX_ROUNDS) {
         prompt("THE MATCH IS OVER".bgGreen.bold);
         displayMatchWinner(scores);
       } else {
