@@ -8,7 +8,6 @@ const DEALER_STAY_VALUE = 17;
 const KING_QUEEN_JACK_VALUE = 10;
 const ACE_CORRECTION = 10;
 const MAX_ROUNDS = 5;
-const END_GAME = 'e';
 const suits = {H: "Hearts", D: "Diamonds", C: "Clubs", S: "Spades"};
 const values = {
   two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9,
@@ -120,14 +119,14 @@ function total(cards) {
 }
 
 function busted(handValue) {
-  return handValue > MAX_ACE_VALUE;
+  return handValue > MAX_SUM;
 }
 
 function detectResult (playersHandValue, dealersHandValue) {
 
-  if (playersHandValue > MAX_ACE_VALUE) {
+  if (playersHandValue > MAX_SUM) {
     return 'PLAYER_BUSTED';
-  } else if (dealersHandValue > MAX_ACE_VALUE) {
+  } else if (dealersHandValue > MAX_SUM) {
     return 'DEALER_BUSTED';
   } else if (playersHandValue > dealersHandValue) {
     return 'PLAYER_WON';
@@ -190,7 +189,7 @@ function updateScore(playersHandValue, dealersHandValue, scores) {
   }
 }
 
-function playerTurn ( playerCards, playersHandValue, deck ) {
+function playerTurn ( pCards, plHandValue, deck ) {
   let playerChoice;
   do {
     prompt("Would you like to (h)it or (S)tay".green.bold);
@@ -202,14 +201,14 @@ function playerTurn ( playerCards, playersHandValue, deck ) {
     console.clear();
 
     if (playerChoice === 'h') {
-      playerCards.push(deck.pop());
-      playersHandValue = total(playerCards);
+      pCards.push(deck.pop());
+      plHandValue = total(pCards);
       prompt("YOU CHOOSE TO HIT".green.bold);
-      prompt(`Cards in your hands are ${hand(playerCards).join(", ")}, having a total value of ${playersHandValue}`.green.bold);
+      prompt(`Cards in your hands are ${hand(pCards).join(", ")}, having a total value of ${plHandValue}`.green.bold);
     }
-  } while (playerChoice !== 's' && !busted(playersHandValue));
+  } while (playerChoice !== 's' && !busted(plHandValue));
 
-  return [playerChoice, playersHandValue, playerCards];
+  return [playerChoice, plHandValue, pCards];
 }
 
 function displayMatchWinner (scores) {
@@ -236,7 +235,7 @@ while (true) {
     prompt(`Press 's' to Start a Match consisting of 5 Rounds or press 'e' to exit the Game`.bgRed.bold);
     choice = READLINE.question();
   }
-  if (choice === END_GAME) break;
+  if (choice === 'e') break;
 
   while (scores.roundsPlayed < MAX_ROUNDS) {
     console.clear();
@@ -268,7 +267,7 @@ while (true) {
       displayResult(playersHandValue, dealersHandValue);
       updateScore(playersHandValue, dealersHandValue, scores);
       displayScores(scores);
-      if (scores.roundsPlayed >= MAX_ROUNDS) {
+      if (scores.roundsPlayed === MAX_ROUNDS) {
         prompt("The Match is over".bgGreen.bold);
         displayMatchWinner(scores);
       } else {
@@ -294,7 +293,7 @@ while (true) {
         updateScore(playersHandValue, dealersHandValue, scores);
         displayScores(scores);
         // eslint-disable-next-line max-depth
-        if (scores.roundsPlayed >= MAX_ROUNDS) {
+        if (scores.roundsPlayed === MAX_ROUNDS) {
           prompt("The Match is over".bgGreen.bold);
           displayMatchWinner(scores);
         }
