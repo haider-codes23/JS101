@@ -1,7 +1,13 @@
-const { bgRed } = require("cli-color");
 const READLINE = require("readline-sync");
+require("cli-color");
 require("colors");
-const suits = {H: "Hearts", D: "Diamonds", C: "Clubs", S: "Spades"};
+const MAX_ACE_VALUE = 11;
+const MAX_SUM = 21;
+const DEALER_STAY_VALUE = 17;
+const KING_QUEEN_JACK_VALUE = 10;
+const ACE_CORRECTION = 10;
+const MAX_ROUNDS = 5;
+const suits = {H: "\u2665", D: "\u2666", C: "\u2663", S: "\u2660"};
 const values = {
   two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9,
   ten: 10, K: 'King', Q: "Queen", J: "Jack", A: "Ace",
@@ -14,24 +20,18 @@ function displayWelcomeMessage() {
 
 function displayGameRules() {
   prompt("GAME RULES".green.bold);
-  prompt("21 Game is played with a Deck of 52 cards".bgGreen.bold);
   prompt('Both the Player and the Dealer will be Dealt with 2 cards each when the Game Starts'.bgGreen.bold);
   prompt("Cards Ranging from 2 through 10 are worth their Face Value".bgGreen.bold);
   prompt("Jack, King and Queen are each worth 10".bgGreen.bold);
   prompt("The Ace can be worth 1 or 11 depending on the Total Value of the Cards in Hand".bgGreen.bold);
   prompt("If the total Value of the Cards in Hand exceeds 21 then Ace will be worth 1 otherWise 11".bgGreen.bold);
   prompt("Both Player and dealer have to make sure their Card's Total value doesn't exceed 21 otherwise they'd get busted".bgGreen.bold);
-  prompt("Dealer has to show one of his cards to the player and has to hide the other one".bgGreen.bold);
-  prompt("There will be 5 Rounds in one Match".bgRed.bold);
   prompt("A round is considered only when Player or Dealer Wins/loses".bgRed.bold);
-  prompt("A TIE is not considered a Round, thus the Player and the Dealer have to play Again until one wins/loses".bgRed.bold);
   prompt("Whoever wins the most number of Rounds wins the overall Match".bgRed.bold);
 }
 
 function displayPlayerRules() {
   prompt("PLAYER RULES".blue.bold);
-  prompt('Player always gets to take the first Turn'.bgBrightBlue.bold);
-  prompt("Hit means Player wants to be dealt another card".bgBrightBlue.bold);
   prompt('Player can either choose to Hit or Stay depending on the value of Cards in Hand and what the Player thinks the Dealer has!'.bgBrightBlue.bold);
   prompt('The Player can continue to hit as many Times as they want unless Player gets busted'.bgBrightBlue.bold);
   prompt("For player to get busted while its his turn, his total value of cards in hand must be greater than 21".bgBrightBlue.bold);
@@ -40,21 +40,14 @@ function displayPlayerRules() {
 
 function displayDealerRules() {
   prompt("Dealer Rules".brightCyan.bold);
-  prompt("Dealer get his turn when the Player Decides to Stay".bgCyan.bold);
+  prompt("Dealer gets his turn when the Player Decides to Stay".bgCyan.bold);
   prompt("Dealer Keeps on Hitting until the Total Value of Cards in Hand Reaches 17".bgCyan.bold);
-  prompt("If Dealer's cards Total value exceeds 17, we check if dealers busted, if not then dealer decides to Stay".bgCyan.bold);
-  prompt("If both Dealer and Player decide to stay we compare their cards total Value".bgCyan.bold);
-  prompt("If Dealer's cards have a higher Total Value, then Dealer Wins".bgCyan.bold);
-  prompt("If Player's cards have a Higher Total Value, then Player Wins".bgCyan.bold);
 }
+
 function prompt(message) {
   console.log(`=> ${message}`);
 }
-// on first iteration first will be equal to array.length - 1 which is
-// 53 - 1 = 52 and the expression will generate a number between 0(inclusive)
-// and 53(excluding), in the next iteration first is decremented by 1 and it's
-// value is 51, now the expression generates a number between 0(inclusive) an
-// 51(excluding).
+
 function shuffle(array) {
   for (let first = array.length - 1; first > 0; first--) {
     let second = Math.floor(Math.random() * (first + 1));// not clear
@@ -63,22 +56,27 @@ function shuffle(array) {
 
   return array;
 }
+// Every Card has a suit and a value/rank
+// we need to create a deck of 52 cards, each having a suit and a rank
+// The Data- structure storing the suits and value/rank are Objects
+// Each suit(e.g. HEARTS) has cards ranging from value/rank = 2 through
+// value/rank = 10 ,JACK, KING, QUEEN and ACE
+// The Data-Structure we'll be using to create a card will be an object
+// The Data- structure that'll be holding the cards/ objects will be an array
+// we'll take one suit at a time and one rank/value
+// Next we going to
 
 function initializeDeck() {
-  let suitsArray = Object.values(suits);
-  let valuesArray = Object.values(values);
   let deck = [];
 
-  for (let suitIndex = 0; suitIndex < suitsArray.length; suitIndex++) {
-    let suit = suitsArray[suitIndex];
+  suits.forEach(suit => {
+    values.forEach(value => {
+      deck.push({suit, value});
+    });
+  });
 
-    for (let valueIndex = 0; valueIndex < valuesArray.length; valueIndex++) {
-      let value = valuesArray[valueIndex];
-      deck.push([value, suit]);
-    }
-  }
 
-  return shuffle(deck);
+  return deck;
 }
 
 function popTwoCards(deck) {
@@ -93,9 +91,9 @@ function total(cards) {
   let sum = 0;
   cards.forEach(card => {
     if (card[0] === "Ace") {
-      sum += 11;
+      sum += MAX_ACE_VALUE;
     } else if (['King', 'Queen', 'Jack'].includes(card[0])) {
-      sum += 10;
+      sum += KING_QUEEN_JACK_VALUE;
     } else {
       sum += card[0];
     }
@@ -103,8 +101,8 @@ function total(cards) {
 
   // Ace correction
   cards.filter(card => card[0] === "Ace").forEach(_ => {
-    if (sum > 21) {
-      sum -= 10;
+    if (sum > MAX_SUM) {
+      sum -= ACE_CORRECTION;
     }
   });
 
@@ -112,14 +110,14 @@ function total(cards) {
 }
 
 function busted(handValue) {
-  return handValue > 21;
+  return handValue > MAX_SUM;
 }
 
 function detectResult (playersHandValue, dealersHandValue) {
 
-  if (playersHandValue > 21) {
+  if (playersHandValue > MAX_SUM) {
     return 'PLAYER_BUSTED';
-  } else if (dealersHandValue > 21) {
+  } else if (dealersHandValue > MAX_SUM) {
     return 'DEALER_BUSTED';
   } else if (playersHandValue > dealersHandValue) {
     return 'PLAYER_WON';
@@ -152,9 +150,10 @@ function displayResult (playersHandValue, dealersHandValue) {
   }
 }
 
-function roundOutput (pCards, dCards, pHandValue, dHandValue) {
-  prompt(`You have ${hand(pCards)}, having a total of ${pHandValue}`.green.bold);
-  prompt(`Dealer has ${hand(dCards)}, having a total of ${dHandValue}`.green.bold);
+// eslint-disable-next-line max-len
+function roundOutput (playerCards, dealerCards, playersHandValue, dealersHandValue) {
+  prompt(`You have ${hand(playerCards)}, having a total of ${playersHandValue}`.green.bold);
+  prompt(`Dealer has ${hand(dealerCards)}, having a total of ${dealersHandValue}`.green.bold);
 }
 
 function displayScores(scores) {
@@ -213,13 +212,11 @@ function displayMatchWinner (scores) {
 }
 
 displayWelcomeMessage();
-displayGameRules();
-displayPlayerRules();
-displayDealerRules();
 READLINE.question(prompt("Hit Enter Key to Proceed to the Game".red.bold));
 console.clear();
 // Outer Game loop
 while (true) {
+  displayGameRules();
   let scores = { playerWins: 0, dealerWins: 0, roundsPlayed: 0 };
 
   let choice = READLINE.question(prompt(`Press 's' to Start a Match consisting of 5 Rounds or press 'e' to exit the Game`.red.bold));
@@ -229,8 +226,8 @@ while (true) {
     choice = READLINE.question();
   }
   if (choice === 'e') break;
-  //console.clear();
-  while (scores.roundsPlayed < 5) {
+
+  while (scores.roundsPlayed < MAX_ROUNDS) {
     console.clear();
     let deck = initializeDeck();
 
@@ -251,16 +248,18 @@ while (true) {
     // Player Makes a Choice to either Hit or Stay
     let playerChoice;
 
+    displayDealerRules();
+    displayPlayerRules();
     // eslint-disable-next-line max-len
     [playerChoice, playersHandValue, playerCards] = playerTurn(playerCards, playersHandValue, deck);
-
-
+    
+    
     if (busted(playersHandValue)) {
       roundOutput(playerCards, dealerCards, playersHandValue, dealersHandValue);
       displayResult(playersHandValue, dealersHandValue);
       updateScore(playersHandValue, dealersHandValue, scores);
       displayScores(scores);
-      if (scores.roundsPlayed >= 5) {
+      if (scores.roundsPlayed === MAX_ROUNDS) {
         prompt("The Match is over".bgGreen.bold);
         displayMatchWinner(scores);
       } else {
@@ -272,7 +271,7 @@ while (true) {
 
     if (playerChoice === 's') {
       // Dealers Turn
-      while (dealersHandValue <= 17) {
+      while (dealersHandValue <= DEALER_STAY_VALUE) {
         prompt("Dealer Hits".green.bold);
         dealerCards.push(deck.pop());
         dealersHandValue = total(dealerCards);
@@ -286,7 +285,7 @@ while (true) {
         updateScore(playersHandValue, dealersHandValue, scores);
         displayScores(scores);
         // eslint-disable-next-line max-depth
-        if (scores.roundsPlayed >= 5) {
+        if (scores.roundsPlayed === MAX_ROUNDS) {
           prompt("The Match is over".bgGreen.bold);
           displayMatchWinner(scores);
         }
@@ -302,7 +301,7 @@ while (true) {
       displayResult(playersHandValue, dealersHandValue);
       updateScore(playersHandValue, dealersHandValue, scores);
       displayScores(scores);
-      if (scores.roundsPlayed >= 5) {
+      if (scores.roundsPlayed === MAX_ROUNDS) {
         prompt("THE MATCH IS OVER".bgGreen.bold);
         displayMatchWinner(scores);
       } else {
